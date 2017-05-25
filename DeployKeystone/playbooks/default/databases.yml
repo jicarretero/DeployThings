@@ -1,0 +1,8 @@
+---
+databases:
+  keystone:
+    dbname: keystone
+    user: keystone
+    password: ks12345
+
+database_host: 192.168.250.206

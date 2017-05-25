@@ -1,0 +1,14 @@
+---
+- name: Install Mysql Server
+  apt: name={{item}} update_cache=yes state=latest
+  with_items:
+    - mysql-server
+
+- name: Bind all
+  command: sed -i 's|^bind-addres.*$|bind-address = 0.0.0.0|g' /etc/mysql/my.cnf
+
+- name: Set mysql password
+  command: mysqladmin -u root password {{mysql_passwords.root_password}}
+
+- name: Restart service
+  service: name=mysql state=restarted

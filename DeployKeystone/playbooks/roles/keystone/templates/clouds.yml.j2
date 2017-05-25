@@ -1,0 +1,9 @@
+clouds:
+  test:
+    region_name: {{keystone.region}}
+    auth:
+      username: '{{service_passwords.os_admin.name}}'
+      password: '{{service_passwords.os_admin.password}}'
+      project_name: '{{service_passwords.os_admin.role}}'
+      auth_url: '{{keystone_config.auth_url}}'
+

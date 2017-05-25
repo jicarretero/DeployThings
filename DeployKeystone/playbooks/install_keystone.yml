@@ -1,0 +1,11 @@
+---
+- hosts: [keystone_containers]
+  user: root
+  roles:
+    - openstack_liberty
+    - keystone
+  vars_files:
+      - default/keystone_defaults.yml
+      - default/passwords.yml
+      - default/databases.yml
+

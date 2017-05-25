@@ -1,0 +1,39 @@
+containers_description:
+  bridge: br-mgmt
+  mtu: 1350
+  gateway: 172.29.236.10
+  main_node: 172.29.238.10
+  containers:
+    - name: lxcgalera1
+      ip: 172.29.238.10/22
+      host: 192.168.218.234
+      mount:
+        source: /data/lxc/lxcgalera1
+        destination: var/lib/mysql
+        flags: bind,create=dir,optional
+        create_local_dir: True
+        remove_on_absent: True
+    - name: lxcgalera2
+      ip: 172.29.238.11/22
+      host: 192.168.218.235
+      mount:
+        source: /data/lxc/lxcgalera2
+        destination: var/lib/mysql
+        flags: bind,create=dir,optional
+        create_local_dir: True
+        remove_on_absent: True
+
+    - name: lxcgalera3
+      ip: 172.29.238.12/22
+      host: 192.168.218.236
+      mount:
+        source: /data/lxc/lxcgalera3
+        destination: var/lib/mysql
+        flags: bind,create=dir,optional
+        create_local_dir: True
+        remove_on_absent: True
+
+wsrep_cluster_address: gcomm://172.29.238.10,172.29.238.11,172.29.238.12
+wsrep_cluster_name: k_galera
+wsrep_provider_options: pc.recovery=TRUE;gcache.size=300M
+innodb_buffer_pool_size: 122M

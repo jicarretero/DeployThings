@@ -1,0 +1,34 @@
++-------------------------------------+----------------------------------------------------------+
+| Field                               | Value                                                    |
++-------------------------------------+----------------------------------------------------------+
+| OS-DCF:diskConfig                   | MANUAL                                                   |
+| OS-EXT-AZ:availability_zone         |                                                          |
+| OS-EXT-SRV-ATTR:host                | None                                                     |
+| OS-EXT-SRV-ATTR:hypervisor_hostname | None                                                     |
+| OS-EXT-SRV-ATTR:instance_name       | instance-00021c34                                        |
+| OS-EXT-STS:power_state              | NOSTATE                                                  |
+| OS-EXT-STS:task_state               | scheduling                                               |
+| OS-EXT-STS:vm_state                 | building                                                 |
+| OS-SRV-USG:launched_at              | None                                                     |
+| OS-SRV-USG:terminated_at            | None                                                     |
+| accessIPv4                          |                                                          |
+| accessIPv6                          |                                                          |
+| addresses                           |                                                          |
+| adminPass                           | evb6sAJPN2YP                                             |
+| config_drive                        |                                                          |
+| created                             | 2017-05-25T06:32:10Z                                     |
+| flavor                              | m1.small (2)                                             |
+| hostId                              |                                                          |
+| id                                  | 6470d7f1-9eb1-454c-941d-744b90a12d65                     |
+| image                               | base_ubuntu_14.04 (2a9630d7-2328-4bbd-bbe7-e125c7008558) |
+| key_name                            | krtkp                                                    |
+| name                                | foonova-0                                                |
+| progress                            | 0                                                        |
+| project_id                          | 61098b1549e94af5b2c3e3f3b2d0a32d                         |
+| properties                          |                                                          |
+| security_groups                     | name='insecure'                                          |
+| status                              | BUILD                                                    |
+| updated                             | 2017-05-25T06:32:10Z                                     |
+| user_id                             | jicarretero                                              |
+| volumes_attached                    |                                                          |
++-------------------------------------+----------------------------------------------------------+

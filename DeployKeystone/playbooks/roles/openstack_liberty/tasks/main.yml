@@ -1,0 +1,12 @@
+---
+- name: Install cloud-ring
+  apt: name=software-properties-common state=latest update-cache=yes
+
+- name:  Add Liberty Repositories
+  shell: add-apt-repository -y cloud-archive:liberty
+
+- name: Install openstackclient
+  apt: name=python-openstackclient state=latest update-cache=yes
+
+- name: Upgrade dist.
+  apt: upgrade=dist

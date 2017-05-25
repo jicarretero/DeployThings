@@ -1,0 +1,32 @@
+---
+- name: Add MariaDB Galera apt-Key
+  apt_key: keyserver=keyserver.ubuntu.com id=BC19DDBA state=present
+
+- name: Add MariaDB Galera Repo.
+  template: src=templates/galera.list.j2 dest=/etc/apt/sources.list.d/galera.list owner=root group=root mode=0644
+
+- name: Install MariaDB Galera Cluster
+  apt: name={{item}} update_cache=yes state=present
+  with_items:
+    - galera-3 
+    - mysql-wsrep-5.6
+
+- name: Change mysql-data to somewhere else
+  shell: |
+    [ ! -d /data/mysql ] && mv /var/lib/mysql /data || /bin/true
+    [ ! -L /var/lib/mysql -a ! -d /var/lib/mysql ] && ln -s /data/mysql /var/lib/mysql || /bin/true
+
+- name: Configure MySQL and replication
+  template: src=templates/my.cnf.j2 dest=/etc/mysql/my.cnf owner=root group=root mode=0644
+
+- name: Service start on primary node
+  service: name=mysql state=restarted args=--wsrep-new-cluster
+  when: containers_description.main_node == ansible_eth0.ipv4.address
+
+- name: Service start on other nodes
+  service: name=mysql state=restarted
+  when: not containers_description.main_node == ansible_eth0.ipv4.address
+
+- name: Service start on primary node
+  command: mysqladmin -u root password {{mysql_passwords.root_password}}
+  when: containers_description.main_node == ansible_eth0.ipv4.address

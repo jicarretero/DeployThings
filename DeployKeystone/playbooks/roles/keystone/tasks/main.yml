@@ -1,0 +1,59 @@
+---
+- name: Install keystone packages
+  apt: pkg={{item}} state=installed
+  with_items:
+  - keystone 
+  - python-openstackclient 
+  - memcached 
+  - python-memcache
+  - python-mysqldb
+
+- name: Configure keystone admin token
+  ini_file: dest="{{config_file}}"
+            section=DEFAULT
+            option=admin_token
+            value="{{admin_token}}"
+
+- name: Configure keystone database connection
+  ini_file: dest="{{config_file}}"
+            section=database
+            option=connection
+            value="mysql://{{databases.keystone.user}}:{{databases.keystone.password}}@{{database_host}}/{{databases.keystone.dbname}}"
+
+- name: Memcache
+  ini_file: dest="{{config_file}}"
+            section=memcache
+            option=servers
+            value=localhost:11211
+
+- name: revoke
+  ini_file: dest="{{config_file}}"
+            section=revoke
+            option=driver
+            value=keystone.contrib.revoke.backends.sql.Revoke
+
+- name: log
+  ini_file: dest="{{config_file}}"
+            section=DEFAULT
+            option=verbose
+            value=True
+
+- name: log 2
+  ini_file: dest="{{config_file}}"
+            section=DEFAULT
+            option=debug
+            value=True
+
+- name: db sync
+  command: keystone-manage db_sync
+  run_once: true
+
+- name: restart keystone
+  service: name=keystone state=restarted
+
+- name: Ensure directory
+  file: path=/root/.config/openstack state=directory
+
+
+- name: Create config.yml file
+  template: src=templates/clouds.yml.j2 dest=/root/.config/openstack/clouds.yml owner=root group=root mode=640

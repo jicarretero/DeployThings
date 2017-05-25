@@ -1,0 +1,18 @@
+---
+- name: Install MySQL Server
+  apt: name={{item}} update_cache=yes state=latest
+  with_items:
+    - mysql-server
+
+- name: Service start on primary node
+  service: name=mysql state=restarted
+  when: containers_description.main_node == ansible_eth0.ipv4.address
+
+- name: Service start on other nodes
+  service: name=mysql state=restarted
+  when: not containers_description.main_node == ansible_eth0.ipv4.address
+
+- name: Service start on primary node
+  command: mysqladmin -u root password {{mysql_passwords.root_password}}
+  when: containers_description.main_node == ansible_eth0.ipv4.address
+

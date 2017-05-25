@@ -1,0 +1,24 @@
+---
+- hosts: [mysql_containers]
+  user: root
+  tasks:
+  - name: Install python-mysqldb
+    apt: name=python-mysqldb state=present
+
+  - name: Create databases
+    mysql_db: name="{{item.value.dbname}}" state="{{st}}" login_user=root login_password="{{mysql_passwords.root_password}}"
+    with_dict: "{{databases}}"
+    run_once: true
+
+  - name: Create users
+    mysql_user: name="{{item.value.user}}" state="{{st}}" login_user=root login_password="{{mysql_passwords.root_password}}" password="{{item.value.password}}" update_password=always priv={{item.value.dbname}}.*:ALL host='%'
+    with_dict: "{{databases}}"
+    run_once: true
+
+  vars_files:
+     - "{{databases_file}}"
+     - "default/passwords.yml"
+
+  vars:
+     st: "{{state | default('present')}}"
+

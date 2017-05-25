@@ -1,0 +1,8 @@
+---
+- hosts: [mysql_containers]
+  user: root
+  roles:
+    - mysql_server
+  vars_files:
+      - default/passwords.yml
+

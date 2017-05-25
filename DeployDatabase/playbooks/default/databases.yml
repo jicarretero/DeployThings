@@ -1,0 +1,27 @@
+---
+databases:
+  keystone:
+    dbname: keystone
+    user: keystone
+    password: ks12345
+
+  glance:
+    dbname: glance
+    user: glance
+    password: gl12345
+
+  nova:
+    dbname: nova
+    user: nova
+    password: nv12345
+  
+  neutron:
+    dbname: neutron
+    user: neutron
+    password: nt12345
+
+  cinder:
+    dbname: cinder
+    user: cinder
+    password: cd12345
+

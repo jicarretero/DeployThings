@@ -1,0 +1,73 @@
+---
+- hosts: [keystone_containers]
+  user: root
+  tasks:
+  - name: python_dev installation
+    apt: pkg={{item}} state=installed
+    with_items:
+      - python-dev
+      - python-pip
+
+  - name: pip install shade
+    pip: name=shade
+ 
+  - name: Create admin user an project
+    shell: |
+       export OS_TOKEN="{{admin_token}}"
+       export OS_URL="{{keystone_config.auth_url}}/v2.0"
+       openstack user show admin || openstack user create --password "{{keystone.admin_password}}" admin
+       openstack project show admin || openstack project create admin
+       openstack project show service || openstack project create service
+       openstack role show admin || openstack role create admin
+       openstack role add --project admin --user admin admin || /bin/true
+    run_once: true
+
+  - name: Create endpoints and so
+    shell: |
+       export OS_TOKEN="{{admin_token}}"
+       export OS_URL="{{keystone_config.auth_url}}/v2.0"
+       openstack service list 2>/dev/null | grep keystone  || \
+           openstack service create --name keystone --description 'OpenStack Identity' identity
+       openstack endpoint show keystone || openstack endpoint create \
+           --publicurl "{{service_passwords.keystone.publicurl}}" \
+           --internalurl "{{service_passwords.keystone.internalurl}}" \
+           --adminurl "{{service_passwords.keystone.adminurl}}" \
+           --region "{{service_passwords.region | default(keystone.region)}}" \
+           identity
+    run_once: true
+    
+  - name: Create users and projects
+    shell: |
+       export OS_TOKEN="{{admin_token}}"
+       export OS_URL="{{keystone_config.auth_url}}/v2.0"
+       openstack user show "{{item.value.name}}" || \
+           openstack user create --password "{{item.value.password}}" "{{item.value.name}}"
+       openstack project show "{{item.value.project}}" || openstack project create "{{item.value.project}}"
+       openstack role show "{{item.value.role}}" || openstack role create "{{item.value.role}}"
+       openstack role add --project "{{item.value.project}}" --user "{{item.value.name}}" "{{item.value.role}}" || \
+           /bin/true
+    with_dict: "{{service_passwords}}"
+    run_once: true
+
+  - name: Create services
+    shell: |
+       export OS_TOKEN="{{admin_token}}"
+       export OS_URL="{{keystone_config.auth_url}}/v2.0"
+       openstack service show "{{item.value.service_name}}" || \
+           openstack service create --name "{{item.value.service_name}}" \
+           --description "{{item.value.description | default('None')}}" "{{item.value.service_type}}"
+       openstack endpoint show "{{item.value.service_type}}" || \
+           openstack endpoint create \
+           --publicurl "{{item.value.publicurl}}" \
+           --internalurl "{{item.value.internalurl}}" \
+           --adminurl "{{item.value.adminurl}}" \
+           --region "{{item.value.region | default(keystone.region)}}" \
+           "{{item.value.service_type}}"
+    with_dict: "{{service_passwords}}"
+    when: item.value.service_name is defined
+    run_once: true
+
+  vars_files:
+    - default/keystone_defaults.yml
+    - default/passwords.yml
+
