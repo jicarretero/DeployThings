@@ -10,4 +10,9 @@ You can use this Software unless Apache Licence 2.0 : https://www.apache.org/lic
 
 This Software suits my pourposes, not supposed to suit anyone's else.
 
+## Description
+These are a set of Ansible playbooks and shell scripts thought to deploy different things.
 
+* **Infra**: Contains Shell scripts to start a VM using Openstack
+* **DeployDatabase**: Contains a few Ansible Playbooks to deploy MySQL or to install some Databases and create some users
+* **DeployKeystone**: Deploys keystone and cofigures the Keystone with users, roles and endpoints.

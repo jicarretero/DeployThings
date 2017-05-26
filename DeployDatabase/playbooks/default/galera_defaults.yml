@@ -2,7 +2,6 @@ containers_description:
   bridge: br-mgmt
   mtu: 1350
   gateway: 172.29.236.10
-  main_node: 172.29.238.10
   containers:
     - name: lxcgalera1
       ip: 172.29.238.10/22
@@ -33,6 +32,7 @@ containers_description:
         create_local_dir: True
         remove_on_absent: True
 
+main_galera_node: 172.29.238.10
 wsrep_cluster_address: gcomm://172.29.238.10,172.29.238.11,172.29.238.12
 wsrep_cluster_name: k_galera
 wsrep_provider_options: pc.recovery=TRUE;gcache.size=300M

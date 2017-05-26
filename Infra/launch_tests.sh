@@ -1,5 +1,7 @@
 #!/bin/bash -x
 
+# Author: Jose Ignacio Carretero Guarde
+
 dirname=`dirname $0`
 cd $dirname
 
@@ -11,14 +13,16 @@ KEY=krtkp
 SECGROUP=insecure
 
 BASE_NAME=${1:-foonova}
-USER_DATA=/tmp/add_ansible.init
+N=${2:-1}
+N=$(($N-1))
 
+USER_DATA=/tmp/add_ansible.init
 
 declare -a nodes
 
 poll=""
 
-for i in 0 ; do
+for i in $(seq 0 $N); do
    [ $i -eq 1 ] && poll="--poll"
    NAME=${BASE_NAME}-${i}
 
